@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hw.mapper.StudentMapper">
+    <resultMap id="BaseResultMap" type="com.hw.model.Student">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="class_id" property="classId" jdbcType="INTEGER"/>
+        <result column="modified" property="modified" jdbcType="BIT"/>
+        <result column="del_flag" property="delFlag" jdbcType="BIT"/>
+    </resultMap>
+    <resultMap id="StudentListResultMap" type="com.hw.model.vo.StudentListVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="class_id" property="classId" jdbcType="INTEGER"/>
+        <result column="cname" property="className" jdbcType="VARCHAR"/>
+        <result column="modified" property="modified" jdbcType="BIT"/>
+        <result column="del_flag" property="delFlag" jdbcType="BIT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, username, password, real_name, class_id, modified, del_flag
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from student
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByUsernameAndPassword" resultType="com.hw.model.Student">
+        select
+        <include refid="Base_Column_List"/>
+        from student where username=#{username} and password=#{password}
+    </select>
+    <select id="selectByUsername" resultType="com.hw.model.Student">
+        select
+        <include refid="Base_Column_List"/>
+        from student where username=#{username}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from student
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.hw.model.Student">
+        insert into student (id, username, password,
+                             real_name, class_id, modified,
+                             del_flag)
+        values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{realName,jdbcType=VARCHAR}, #{classId,jdbcType=INTEGER}, #{modified,jdbcType=BIT},
+                #{delFlag,jdbcType=BIT})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hw.model.Student">
+        insert into student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="realName != null">
+                real_name,
+            </if>
+            <if test="classId != null">
+                class_id,
+            </if>
+            <if test="modified != null">
+                modified,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="classId != null">
+                #{classId,jdbcType=INTEGER},
+            </if>
+            <if test="modified != null">
+                #{modified,jdbcType=BIT},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hw.model.Student">
+        update student
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="classId != null">
+                class_id = #{classId,jdbcType=INTEGER},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=BIT},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hw.model.Student">
+        update student
+        set username  = #{username,jdbcType=VARCHAR},
+            password  = #{password,jdbcType=VARCHAR},
+            real_name = #{realName,jdbcType=VARCHAR},
+            class_id  = #{classId,jdbcType=INTEGER},
+            modified  = #{modified,jdbcType=BIT},
+            del_flag  = #{delFlag,jdbcType=BIT}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectClassIdStudentById" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select
+        class_id
+        from student
+        where id = #{id}
+    </select>
+
+    <select id="selectUsernameStudentById" resultType="String" parameterType="java.lang.Integer">
+        select
+        username
+        from student
+        where id = #{id}
+    </select>
+
+    <select id="selectAllStudent" resultMap="StudentListResultMap">
+        select t1.*,t2.cname from student t1 left join tb_class t2 on t1.class_id = t2.id
+        <where>
+            <if test="realName!=null and realName!=''">
+                t1.real_name like '%${realName}%'
+            </if>
+            <if test="className !=null">
+                and t1.class_id = #{className}
+            </if>
+            <if test="realName==null and className ==null">
+                and t1.del_flag = 0
+            </if>
+            <if test="realName!=null or className !=null">
+                and t1.del_flag = 0
+            </if>
+        </where>
+        order by t1.id
+    </select>
+
+    <select id="getExcelTemplate" resultMap="BaseResultMap">
+    select * from student  order by id desc limit 0, 10;
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into student(username, password,
+        real_name,class_id, modified,del_flag)
+        values
+        <foreach collection="list" item="student" separator=",">
+            (#{student.username},#{student.password},#{student.realName},
+            #{student.classId},0,0)
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hw.mapper.ExamMapper">
+    <resultMap id="BaseResultMap" type="com.hw.model.Exam">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="time_limit" property="timeLimit" jdbcType="INTEGER"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status"/>
+        <result column="teacher_id" property="teacherId" jdbcType="INTEGER"/>
+        <result column="single_points" property="singlePoints" jdbcType="DOUBLE"/>
+        <result column="multi_points" property="multiPoints" jdbcType="DOUBLE"/>
+        <result column="judge_points" property="judgePoints" jdbcType="DOUBLE"/>
+        <result column="valid" property="valid"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="type" property="type"/>
+    </resultMap>
+    <resultMap id="ExamListForStudentVoResultMap" type="com.hw.model.vo.ExamListForStudentVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="time_limit" property="time_limit" jdbcType="INTEGER"/>
+        <result column="start_time" property="start_time" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="single_points" property="single_points" jdbcType="DOUBLE"/>
+        <result column="multi_points" property="multi_points" jdbcType="DOUBLE"/>
+        <result column="judge_points" property="judge_points" jdbcType="DOUBLE"/>
+        <result column="valid" property="valid"/>
+        <result column="end_time" property="end_time" jdbcType="TIMESTAMP"/>
+        <result column="type" property="type"/>
+    </resultMap>
+    <resultMap id="ExamVoResultMap" type="com.hw.model.ExamVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="time_limit" property="timeLimit" jdbcType="INTEGER"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status"/>
+        <result column="teacher_id" property="teacherId" jdbcType="INTEGER"/>
+        <result column="single_points" property="singlePoints" jdbcType="DOUBLE"/>
+        <result column="multi_points" property="multiPoints" jdbcType="DOUBLE"/>
+        <result column="judge_points" property="judgePoints" jdbcType="DOUBLE"/>
+        <result column="valid" property="valid"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="type" property="type"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, title, time_limit, start_time, status, teacher_id, single_points, multi_points,
+    judge_points, valid, end_time, type
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from exam
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByTeacherId" resultMap="BaseResultMap">
+        select * from exam
+        <where>
+            teacher_id=#{teacherId}
+            <if test="title!=null and title!=''">
+                and title like CONCAT ('%',#{title},'%')
+            </if>
+            <if test="status!=null and status !=-1">
+                and status=#{status}
+            </if>
+            <if test="valid!=null">
+                and valid=#{valid}
+            </if>
+        </where>
+
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from exam
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into exam (id, title, time_limit,
+                          start_time, status, teacher_id,
+                          single_points, multi_points, judge_points,
+                          valid, end_time, type)
+        values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{timeLimit,jdbcType=INTEGER},
+                #{startTime,jdbcType=TIMESTAMP}, #{status}, #{teacherId,jdbcType=INTEGER},
+                #{singlePoints,jdbcType=DOUBLE}, #{multiPoints,jdbcType=DOUBLE}, #{judgePoints,jdbcType=DOUBLE},
+                #{valid}, #{endTime,jdbcType=TIMESTAMP}, #{type})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hw.model.Exam">
+        insert into exam
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="timeLimit != null">
+                time_limit,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="teacherId != null">
+                teacher_id,
+            </if>
+            <if test="singlePoints != null">
+                single_points,
+            </if>
+            <if test="multiPoints != null">
+                multi_points,
+            </if>
+            <if test="judgePoints != null">
+                judge_points,
+            </if>
+            <if test="valid != null">
+                valid,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="timeLimit != null">
+                #{timeLimit,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="teacherId != null">
+                #{teacherId,jdbcType=INTEGER},
+            </if>
+            <if test="singlePoints != null">
+                #{singlePoints,jdbcType=DOUBLE},
+            </if>
+            <if test="multiPoints != null">
+                #{multiPoints,jdbcType=DOUBLE},
+            </if>
+            <if test="judgePoints != null">
+                #{judgePoints,jdbcType=DOUBLE},
+            </if>
+            <if test="valid != null">
+                #{valid},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+        </trim>
+    </insert>
+    <insert id="addExamClassRecord">
+        insert into exam_class (exam_id, class_id, del_flag)
+        values (#{examId}, #{classId}, 0)
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hw.model.Exam">
+        update exam
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="timeLimit != null">
+                time_limit = #{timeLimit,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="teacherId != null">
+                teacher_id = #{teacherId,jdbcType=INTEGER},
+            </if>
+            <if test="singlePoints != null">
+                single_points = #{singlePoints,jdbcType=DOUBLE},
+            </if>
+            <if test="multiPoints != null">
+                multi_points = #{multiPoints,jdbcType=DOUBLE},
+            </if>
+            <if test="judgePoints != null">
+                judge_points = #{judgePoints,jdbcType=DOUBLE},
+            </if>
+            <if test="valid != null">
+                valid = #{valid},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hw.model.Exam">
+        update exam
+        set title         = #{title,jdbcType=VARCHAR},
+            time_limit    = #{timeLimit,jdbcType=INTEGER},
+            start_time    = #{startTime,jdbcType=TIMESTAMP},
+            status        = #{status},
+            teacher_id    = #{teacherId,jdbcType=INTEGER},
+            single_points = #{singlePoints,jdbcType=DOUBLE},
+            multi_points  = #{multiPoints,jdbcType=DOUBLE},
+            judge_points  = #{judgePoints,jdbcType=DOUBLE},
+            valid         = #{valid},
+            end_time      = #{endTime,jdbcType=TIMESTAMP},
+            type          = #{type}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateStatusById">
+        update exam
+        set status =#{status}
+        where id = #{id}
+    </update>
+    <update id="updateValidById">
+        update exam
+        set valid =#{valid}
+        where id = #{id}
+    </update>
+    <update id="updateExamClass">
+        update exam_class set del_flag = #{delFlag} where exam_id=#{examId} and class_id=#{classId}
+    </update>
+
+
+    <select id="selectExamById"  resultMap="ExamListForStudentVoResultMap" parameterType="Integer">
+        select t1.*,t3.username from exam t1 left join exam_class t2
+        on t1.id = t2.exam_id
+        left join teacher t3
+        on t1.teacher_id = t3.id
+        where t2.class_id = 1 and t1.valid = 0 and t1.status != 4 order by t1.id;
+    </select>
+
+    <select id="selectExamUndo" resultMap="BaseResultMap">
+        select * from exam t3 where t3.id not in(select t1.id from exam t1  join exam_result t2 on t1.id =t2.exam_id where t1.valid =0) and t3.valid =0 and t3.status !=4;
+    </select>
+
+    <select id="selectExamDo" resultMap="BaseResultMap">
+        select * from exam t3 where t3.id  in(select t1.id from exam t1  join exam_result t2 on t1.id =t2.exam_id where t1.valid =0) and t3.valid =0 and t3.status !=4;
+    </select>
+
+</mapper>

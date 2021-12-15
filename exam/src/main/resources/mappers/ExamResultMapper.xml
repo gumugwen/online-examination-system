@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hw.mapper.ExamResultMapper">
+    <resultMap id="BaseResultMap" type="com.hw.model.ExamResult">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="point" property="point" jdbcType="DOUBLE"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="exam_title" property="examTitle" jdbcType="VARCHAR"/>
+        <result column="exam_id" property="examId" jdbcType="INTEGER"/>
+        <result column="student_id" property="studentId" jdbcType="INTEGER"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <resultMap id="searchMap" type="com.hw.model.vo.ExamResultVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="exam_id" property="examId" jdbcType="DOUBLE"/>
+        <result column="exam_title" property="title" jdbcType="DOUBLE"/>
+        <result column="point" property="point" jdbcType="DOUBLE"/>
+        <result column="student_id" property="studentId" jdbcType="DOUBLE"/>
+        <result column="studentName" property="studentName" jdbcType="DOUBLE"/>
+        <result column="className" property="className" jdbcType="DOUBLE"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, point, start_time, end_time, exam_title, exam_id, student_id, del_flag, status
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from exam_result
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="findByParams" resultMap="searchMap">
+        SELECT er.*,
+        tc.cname AS className,
+        s.real_name AS studentName
+        FROM exam_result er,
+        exam e,
+        tb_class tc,
+        student s
+        <where>
+            e.teacher_id = #{teacherId}
+            AND e.id = er.exam_id
+            <if test="status!=null and status!=-1">
+                AND er.STATUS = #{status}
+            </if>
+            AND s.id = er.student_id
+            AND s.class_id = tc.id
+
+            <if test="classId!=null and classId!=-1">
+                AND tc.id = #{classId}
+            </if>
+            <if test="title!=null and title!=''">
+                AND e.title LIKE CONCAT ('%',#{title},'%')
+            </if>
+        </where>
+
+
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from exam_result
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.hw.model.ExamResult">
+        insert into exam_result (id, point, start_time,
+                                 end_time, exam_title, exam_id,
+                                 student_id, del_flag, status)
+        values (#{id,jdbcType=INTEGER}, #{point,jdbcType=DOUBLE}, #{startTime,jdbcType=TIMESTAMP},
+                #{endTime,jdbcType=TIMESTAMP}, #{examTitle,jdbcType=VARCHAR}, #{examId,jdbcType=INTEGER},
+                #{studentId,jdbcType=INTEGER}, #{delFlag,}, #{status,})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hw.model.ExamResult">
+        insert into exam_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="point != null">
+                point,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="examTitle != null">
+                exam_title,
+            </if>
+            <if test="examId != null">
+                exam_id,
+            </if>
+            <if test="studentId != null">
+                student_id,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="point != null">
+                #{point,jdbcType=DOUBLE},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="examTitle != null">
+                #{examTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="examId != null">
+                #{examId,jdbcType=INTEGER},
+            </if>
+            <if test="studentId != null">
+                #{studentId,jdbcType=INTEGER},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,},
+            </if>
+            <if test="status != null">
+                #{status,},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hw.model.ExamResult">
+        update exam_result
+        <set>
+            <if test="point != null">
+                point = #{point,jdbcType=DOUBLE},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="examTitle != null">
+                exam_title = #{examTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="examId != null">
+                exam_id = #{examId,jdbcType=INTEGER},
+            </if>
+            <if test="studentId != null">
+                student_id = #{studentId,jdbcType=INTEGER},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,},
+            </if>
+            <if test="status != null">
+                status = #{status,},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hw.model.ExamResult">
+        update exam_result
+        set point      = #{point,jdbcType=DOUBLE},
+            start_time = #{startTime,jdbcType=TIMESTAMP},
+            end_time   = #{endTime,jdbcType=TIMESTAMP},
+            exam_title = #{examTitle,jdbcType=VARCHAR},
+            exam_id    = #{examId,jdbcType=INTEGER},
+            student_id = #{studentId,jdbcType=INTEGER},
+            del_flag   = #{delFlag,},
+            status     = #{status,}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertExamResultForStudent" parameterType="com.hw.model.ExamResult">
+        insert into exam_result (start_time,
+                                 end_time, exam_title, exam_id,
+                                 student_id, del_flag, status)
+        values (#{startTime,jdbcType=TIMESTAMP},
+                #{endTime,jdbcType=TIMESTAMP}, #{examTitle,jdbcType=VARCHAR}, #{examId,jdbcType=INTEGER},
+                #{studentId,jdbcType=INTEGER}, #{delFlag,}, #{status,})
+    </insert>
+
+    <select id="selectExamResultByStudentExamId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select id from exam_result where  student_id = #{student_id} and exam_id = #{exam_id} and del_flag = 0
+    </select>
+
+    <select id="selectExamResultByStudentExamIdBy" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(id) from exam_result where  student_id = #{student_id} and exam_id = #{exam_id} and del_flag = 0
+    </select>
+
+    <update id="updateById" parameterType="java.lang.Integer">
+        update exam_result
+        set point      = #{point}
+        where id = #{id}
+    </update>
+
+    <select id="selectExamResultByStudentId" resultMap="BaseResultMap" >
+        select * from exam_result where  student_id = #{student_id} and exam_title like '%${exam_title}%'
+    </select>
+
+    <select id="selectMinPoint" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select coalesce(min(point),0) from exam_result where student_id = #{student_id} and del_flag = 0
+    </select>
+
+    <select id="selectMaxPoint" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select coalesce(max(point),0) from exam_result where student_id = #{student_id} and del_flag = 0
+    </select>
+
+    <select id="selectExamByStudentId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select * from exam_result where student_id = #{student_id} and del_flag = 0
+    </select>
+
+</mapper>

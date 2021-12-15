@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hw.mapper.MajorMapper" >
+  <resultMap id="BaseResultMap" type="com.hw.model.Major" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from major
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from major
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hw.model.Major" >
+    insert into major (name
+    )
+    values (#{name,jdbcType=VARCHAR}
+           )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hw.model.Major" >
+    insert into major
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hw.model.Major" >
+    update major
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hw.model.Major" >
+    update major
+    set name = #{name,jdbcType=VARCHAR},
+        del_flag = #{delFlag}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select t.* from major t where t.del_flag=0
+    <if test="value!=null and value!=''">
+      and t.name like '%${value}%'
+    </if>
+    order by t.name
+  </select>
+
+  <!--根据年级名称查询-->
+  <select id="selectByName"  resultMap="BaseResultMap" parameterType="java.lang.String">
+    select t.* from major t where t.name=#{name}
+  </select>
+</mapper>

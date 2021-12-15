@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hw.mapper.TbClassMapper" >
+  <resultMap id="BaseResultMap" type="com.hw.model.TbClass" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="cno" property="cno" jdbcType="INTEGER" />
+    <result column="cname" property="cname" jdbcType="VARCHAR" />
+    <result column="grade_id" property="gradeId" jdbcType="INTEGER" />
+    <result column="major_id" property="majorId" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cno, cname, grade_id, major_id, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_class
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectByTeacherId" resultType="com.hw.model.TbClass">
+      select tcl.id,tcl.cname from tb_class tcl ,teacher_class  tc where  tc.teacher_id=#{teacherId} and tc.class_id=tcl.id
+    </select>
+    <select id="selectExamId" resultType="com.hw.model.TbClass">
+      select tcl.* from tb_class tcl,exam_class ec where ec.class_id=tcl.id and ec.del_flag=0  and ec.exam_id=#{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_class
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hw.model.TbClass" >
+    insert into tb_class (id, cno, cname, 
+      grade_id, major_id, del_flag
+      )
+    values (#{id,jdbcType=INTEGER}, #{cno,jdbcType=INTEGER}, #{cname,jdbcType=VARCHAR}, 
+      #{gradeId,jdbcType=INTEGER}, #{majorId,jdbcType=INTEGER}, #{delFlag,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hw.model.TbClass" >
+    insert into tb_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cno != null" >
+        cno,
+      </if>
+      <if test="cname != null" >
+        cname,
+      </if>
+      <if test="gradeId != null" >
+        grade_id,
+      </if>
+      <if test="majorId != null" >
+        major_id,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cno != null" >
+        #{cno,jdbcType=INTEGER},
+      </if>
+      <if test="cname != null" >
+        #{cname,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeId != null" >
+        #{gradeId,jdbcType=INTEGER},
+      </if>
+      <if test="majorId != null" >
+        #{majorId,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hw.model.TbClass" >
+    update tb_class
+    <set >
+      <if test="cno != null" >
+        cno = #{cno,jdbcType=INTEGER},
+      </if>
+      <if test="cname != null" >
+        cname = #{cname,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeId != null" >
+        grade_id = #{gradeId,jdbcType=INTEGER},
+      </if>
+      <if test="majorId != null" >
+        major_id = #{majorId,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hw.model.TbClass" >
+    update tb_class
+    set cno = #{cno,jdbcType=INTEGER},
+      cname = #{cname,jdbcType=VARCHAR},
+      grade_id = #{gradeId,jdbcType=INTEGER},
+      major_id = #{majorId,jdbcType=INTEGER},
+      del_flag = #{delFlag,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAllClass" resultMap="BaseResultMap">
+      select * from tb_class where del_flag = 0 order by id
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select t.* from tb_class t where t.del_flag=0
+    <if test="cno!=null and cno!=''">
+      and t.cno like '%${cno}%'
+    </if>
+    <if test="cname!=null and cname!=''">
+      and t.cname like '%${cname}%'
+    </if>
+    order by t.cno
+  </select>
+
+  <!--根据年级名称查询-->
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select t.* from tb_class t where t.cname=#{name}
+  </select>
+  <select id="selectByNo" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select t.* from tb_class t where t.cno=#{cno}
+  </select>
+</mapper>

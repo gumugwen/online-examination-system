@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hw.mapper.QuestionJudgeMapper">
+    <resultMap id="BaseResultMap" type="com.hw.model.QuestionJudge">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="answer" property="answer" jdbcType="BIT"/>
+        <result column="score" property="score"/>
+        <result column="fk_teacher" property="fkTeacher" jdbcType="INTEGER"/>
+        <result column="teacherName" property="teacherName"/>
+        <result column="exam_id" property="examId" jdbcType="INTEGER"/>
+        <result column="del_flag" property="delFlag" jdbcType="BIT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, title, answer, score, fk_teacher, exam_id, del_flag
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from question_judge
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByExamId" resultMap="BaseResultMap">
+        select j.*,t.real_name as teacherName from question_judge j,teacher t
+        <where>
+            exam_id=#{examId} and t.id=j.fk_teacher
+            <if test="title!=null and title != ''">
+                and title like CONCAT ('%',#{title},'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from question_judge
+        <where>
+            <if test="judgeIds!=null and judgeIds.size()>0">
+                id in
+                <foreach collection="judgeIds" separator="," close=")" open="(" item="id" index="index">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from question_judge
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.hw.model.QuestionJudge">
+        insert into question_judge (id, title, answer,
+                                    score, fk_teacher, exam_id,
+                                    del_flag)
+        values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{answer,jdbcType=BIT},
+                #{score}, #{fkTeacher,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER},
+                #{delFlag,jdbcType=BIT})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hw.model.QuestionJudge">
+        insert into question_judge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="answer != null">
+                answer,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="fkTeacher != null">
+                fk_teacher,
+            </if>
+            <if test="examId != null">
+                exam_id,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="answer != null">
+                #{answer,jdbcType=BIT},
+            </if>
+            <if test="score != null">
+                #{score},
+            </if>
+            <if test="fkTeacher != null">
+                #{fkTeacher,jdbcType=INTEGER},
+            </if>
+            <if test="examId != null">
+                #{examId,jdbcType=INTEGER},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBatch">
+        insert into question_judge (title, answer,
+        score, fk_teacher, exam_id,
+        del_flag)
+        values
+        <foreach collection="questionJudgeList" index="index" item="judge"  separator=",">
+            (#{judge.title,jdbcType=VARCHAR}, #{judge.answer,jdbcType=BIT},
+            #{judge.score}, #{judge.fkTeacher,jdbcType=INTEGER}, #{judge.examId,jdbcType=INTEGER},
+            #{judge.delFlag,jdbcType=BIT})
+        </foreach>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hw.model.QuestionJudge">
+        update question_judge
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="answer != null">
+                answer = #{answer,jdbcType=BIT},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="fkTeacher != null">
+                fk_teacher = #{fkTeacher,jdbcType=INTEGER},
+            </if>
+            <if test="examId != null">
+                exam_id = #{examId,jdbcType=INTEGER},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hw.model.QuestionJudge">
+        update question_judge
+        set title      = #{title,jdbcType=VARCHAR},
+            answer     = #{answer,jdbcType=BIT},
+            score      = #{score},
+            fk_teacher = #{fkTeacher,jdbcType=INTEGER},
+            exam_id    = #{examId,jdbcType=INTEGER},
+            del_flag   = #{delFlag,jdbcType=BIT}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateDelFlagById">
+        update question_judge
+        set del_flag = #{delFlag}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectQuestionByExamId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from question_judge
+        where exam_id = #{exam_id} and del_flag = 0
+    </select>
+
+    <select id="selectQuestionCountByExamId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(*) from question_judge where exam_id = #{exam_id} and del_flag = 0;
+    </select>
+
+</mapper>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hw.mapper.ExamResultQuestionMapper">
+    <resultMap id="BaseResultMap" type="com.hw.model.ExamResultQuestion">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="right" property="right" jdbcType="BIT"/>
+        <result column="wrong_answer" property="wrongAnswer" jdbcType="VARCHAR"/>
+        <result column="right_answer" property="rightAnswer" jdbcType="VARCHAR"/>
+        <result column="score" property="score" jdbcType="DOUBLE"/>
+        <result column="exam_result_id" property="examResultId" jdbcType="INTEGER"/>
+        <result column="question_id" property="questionId" jdbcType="INTEGER"/>
+        <result column="qtype" property="qtype"/>
+        <result column="del_flag" property="delFlag" jdbcType="BIT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `right`, wrong_answer, right_answer, score, exam_result_id, question_id, qtype,del_flag
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from exam_result_question
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByResultId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from exam_result_question
+        where exam_result_id = #{resultId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from exam_result_question
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.hw.model.ExamResultQuestion">
+        insert into exam_result_question (id, right, wrong_answer,
+                                          right_answer, score, exam_result_id,
+                                          question_id, qtype, del_flag)
+        values (#{id,jdbcType=INTEGER}, #{right,jdbcType=BIT}, #{wrongAnswer,jdbcType=VARCHAR},
+                #{rightAnswer,jdbcType=VARCHAR}, #{score,jdbcType=DOUBLE}, #{examResultId,jdbcType=INTEGER},
+                #{questionId,jdbcType=INTEGER}, #{qtype}, #{delFlag,jdbcType=BIT})
+    </insert>
+    <insert id="insertSelective" parameterType="com.hw.model.ExamResultQuestion">
+        insert into exam_result_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="right != null">
+                right,
+            </if>
+            <if test="wrongAnswer != null">
+                wrong_answer,
+            </if>
+            <if test="rightAnswer != null">
+                right_answer,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="examResultId != null">
+                exam_result_id,
+            </if>
+            <if test="questionId != null">
+                question_id,
+            </if>
+            <if test="qtype != null">
+                qtype,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="right != null">
+                #{right,jdbcType=BIT},
+            </if>
+            <if test="wrongAnswer != null">
+                #{wrongAnswer,jdbcType=VARCHAR},
+            </if>
+            <if test="rightAnswer != null">
+                #{rightAnswer,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=DOUBLE},
+            </if>
+            <if test="examResultId != null">
+                #{examResultId,jdbcType=INTEGER},
+            </if>
+            <if test="questionId != null">
+                #{questionId,jdbcType=INTEGER},
+            </if>
+            <if test="qtype != null">
+                #{qtype},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hw.model.ExamResultQuestion">
+        update exam_result_question
+        <set>
+            <if test="right != null">
+                right = #{right,jdbcType=BIT},
+            </if>
+            <if test="wrongAnswer != null">
+                wrong_answer = #{wrongAnswer,jdbcType=VARCHAR},
+            </if>
+            <if test="rightAnswer != null">
+                right_answer = #{rightAnswer,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=DOUBLE},
+            </if>
+            <if test="examResultId != null">
+                exam_result_id = #{examResultId,jdbcType=INTEGER},
+            </if>
+            <if test="questionId != null">
+                question_id = #{questionId,jdbcType=INTEGER},
+            </if>
+            <if test="qtype != null">
+                qtype = #{qtype},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hw.model.ExamResultQuestion">
+        update exam_result_question
+        set right          = #{right,jdbcType=BIT},
+            wrong_answer   = #{wrongAnswer,jdbcType=VARCHAR},
+            right_answer   = #{rightAnswer,jdbcType=VARCHAR},
+            score          = #{score,jdbcType=DOUBLE},
+            exam_result_id = #{examResultId,jdbcType=INTEGER},
+            question_id    = #{questionId,jdbcType=INTEGER},
+            qtype          = #{qtype},
+            del_flag       = #{delFlag,jdbcType=BIT}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertExamResultQuestiionByList" parameterType="java.util.List">
+        insert into
+        exam_result_question(exam_result_question.right,wrong_answer,right_answer,score,exam_result_id,question_id,qtype,del_flag)
+        values
+        <foreach collection="list" item="it" separator=",">
+            (#{it.right},#{it.wrongAnswer},#{it.rightAnswer},#{it.score},#{it.examResultId},#{it.questionId},#{it.qtype},#{it.delFlag})
+        </foreach>
+    </insert>
+
+    <select id="selectScoreByExamId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select coalesce(SUM(score),0) from exam_result_question where exam_result_question.right = 1 and exam_result_id= #{exam_result_id}
+    </select>
+</mapper>

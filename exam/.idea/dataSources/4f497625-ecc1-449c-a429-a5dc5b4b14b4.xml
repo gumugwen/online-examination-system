@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="exam@localhost">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.31">
+    <root id="1">
+      <DefaultCasing>mixed/mixed</DefaultCasing>
+      <DefaultEngine>InnoDB</DefaultEngine>
+      <DefaultTmpEngine>InnoDB</DefaultTmpEngine>
+      <ServerVersion>5.7.31</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="consult">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="3" parent="1" name="db_sec_skill">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="4" parent="1" name="dts-shop">
+      <Collation>utf8_general_ci</Collation>
+    </schema>
+    <schema id="5" parent="1" name="exam">
+      <Collation>utf8mb4_general_ci</Collation>
+      <Current>1</Current>
+    </schema>
+    <schema id="6" parent="1" name="gun">
+      <Collation>utf8mb4_bin</Collation>
+    </schema>
+    <schema id="7" parent="1" name="information_schema">
+      <Collation>utf8_general_ci</Collation>
+    </schema>
+    <schema id="8" parent="1" name="leyou">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="9" parent="1" name="mysql">
+      <Collation>latin1_swedish_ci</Collation>
+    </schema>
+    <schema id="10" parent="1" name="mysql-lcok">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="11" parent="1" name="oauth2">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="12" parent="1" name="order">
+      <Collation>utf8_general_ci</Collation>
+    </schema>
+    <schema id="13" parent="1" name="performance_schema">
+      <Collation>utf8_general_ci</Collation>
+    </schema>
+    <schema id="14" parent="1" name="shixun">
+      <Collation>utf8_bin</Collation>
+    </schema>
+    <schema id="15" parent="1" name="study-security">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="16" parent="1" name="sys">
+      <Collation>utf8_general_ci</Collation>
+    </schema>
+    <schema id="17" parent="1" name="test">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="18" parent="1" name="wblog_article">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="19" parent="1" name="wblog_follow">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="20" parent="1" name="wblog_user">
+      <Collation>latin1_swedish_ci</Collation>
+    </schema>
+    <schema id="21" parent="1" name="weblog_sys_log">
+      <Collation>utf8mb4_general_ci</Collation>
+    </schema>
+    <schema id="22" parent="1" name="xc_user">
+      <Collation>utf8mb4_bin</Collation>
+    </schema>
+  </database-model>
+</dataSource>
